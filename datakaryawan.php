@@ -18,7 +18,7 @@
                     <th style="width: 200px; text-align: center">No. Kartu</th>
                     <th style="width: 300px; text-align: center">NIM</th>
                     <th style="width: 300px; text-align: center">NAMA</th>
-                    <th style="width: 20px; text-align: center">Aksi</th>
+                    <th style="width: 5px; text-align: center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +28,7 @@
                     include "koneksi.php";
 
                     // baca data mahasiswa
-                    $sql = mysqli_query($konek, "select * from karyawan");
+                    $sql = mysqli_query($konek, "select * from mahasiswa");
                     $no = 0;
                     while($data = mysqli_fetch_array($sql))
                     {
@@ -38,8 +38,10 @@
                 <tr>
                     <td> <?php echo $no; ?> </td>
                     <td> <?php echo $data['nokartu']; ?> </td>
+                    <td> <?php echo $data['nim']; ?> </td>
                     <td> <?php echo $data['nama']; ?> </td>
-                    <td> <?php echo $data['alamat']; ?> </td>
+                  
+                    
                     <td>
                         <a href="edit.php?id=<?php echo $data['id']; ?>" >
                         Edit</a> | <a href="hapus.php?id=<?php echo $data['id']; ?>" >
@@ -59,4 +61,4 @@
         </div>
         <?php include "footer.php"; ?>
     </body>
-</html>
+</html> 
