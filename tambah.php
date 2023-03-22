@@ -14,7 +14,7 @@
         $simpan = mysqli_query($konek, "insert into mahasiswa(nokartu, nim, nama)values('$nokartu', '$nim', '$nama')");
 
         //jika berhasil tersimpan, tampilkan pesan Tersimpan
-        //kembali ke data karyawan
+        //kembali ke data mahasiswa
         if($simpan)
         {
             echo "
