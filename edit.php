@@ -17,11 +17,11 @@
         $nim        = $_POST['nim'];
         $nama       = $_POST['nama'];
 
-        //simpan ke tabel karyawan
+        //simpan ke tabel mahasiswa
         $simpan = mysqli_query($konek, "update mahasiswa set nokartu='$nokartu', nim='$nim', nama='$nama' where id='$id'");
 
         //jika berhasil tersimpan, tampilkan pesan Tersimpan
-        //kembali ke data karyawan
+        //kembali ke data mahasiswa
         if($simpan)
         {
             echo "
