@@ -3,22 +3,34 @@
     <head>
         <?php include "header.php"; ?>
         <title>Data Mahasiswa</title>
+       <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
 
         <?php include "menu.php"; ?>
 
         <!--ISI-->
-        <div class="container-fluid">
+        
+        
+        <div class="container-fluid" style="width:100%;">
             <h3>Data Mahasiswa</h3>
-            <table class="table table-bordered">
+
+                        
+                        <!-- tombol tambah data mahasiswa -->
+                        <div class="table-header" style="float: right;">
+                        <a href="tambah.php"><button class="btn btn-primary"> Tambah Data Mahasiswa</button></a>
+                        </div>
+
+                        <div style="clear: both;"></div>
+
+            <table class="table table-bordered" style="margin-top: 10px">
             <thead>
-                <tr style="background-color: grey">
-                    <th style="width: 10px; text-align: center">No.</th>
+                <tr style="background-color: grey; color: white; height:100%;">
+                    <th style="width: 10px; text-align: center" >No.</th>
                     <th style="width: 200px; text-align: center">No. Kartu</th>
                     <th style="width: 300px; text-align: center">NIM</th>
                     <th style="width: 300px; text-align: center">NAMA</th>
-                    <th style="width: 5px; text-align: center">Aksi</th>
+                    <th style="width: 7.3%; text-align: center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,29 +48,30 @@
                 ?>
 
                 <tr>
-                    <td> <?php echo $no; ?> </td>
+                    <td style="text-align: center"> <?php echo $no; ?> </td>
                     <td> <?php echo $data['nokartu']; ?> </td>
                     <td> <?php echo $data['nim']; ?> </td>
                     <td> <?php echo $data['nama']; ?> </td>
-                  
+                    
                     
                     <td>
-                        <a href="edit.php?id=<?php echo $data['id']; ?>" >
-                        Edit</a> | <a href="hapus.php?id=<?php echo $data['id']; ?>" >
-                        Hapus</a>
+                        <a href="edit.php?id=<?php echo $data['id']; ?>" ><button class="btn btn-success" style="width:70x;">Edit</button>
+                        </a> <a href="hapus.php?id=<?php echo $data['id']; ?>" ><button class="btn btn-danger" style="width:65px;">Hapus</button></a>
+                       
                     </td>
                 </tr>
 
                 <?php } ?>
             </tbody>
-
-
             </table>
 
-            <!-- tombol tambah data mahasiswa -->
-            <a href="tambah.php"> <button class="btn btn-primary">Tambah Data Mahasiswa</button> </a>
-
         </div>
-        <?php include "footer.php"; ?>
+       
+       
+        
     </body>
+
+    <?php include "footer.php";  ?>
+   
 </html> 
+
