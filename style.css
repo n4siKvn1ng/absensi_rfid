@@ -1,7 +1,11 @@
 /* Styling untuk footer */
+body{
+  min-height: 100vh;
+}
+
 .footer{
-  position: fixed;
-  bottom: 0;
+  position: sticky;
+  top: 100%;
   margin-top: auto;
   width: 100%;
   color: white;
@@ -10,3 +14,13 @@
   text-align: center;
 }
 
+body{
+  margin: 0px;
+}
+
+.container{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
