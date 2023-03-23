@@ -1,30 +1,53 @@
-<?php 
+<?php
     include "koneksi.php";
 
-    // baca id data yang akan dihapus
+    //baca ID Data yang akan dihapus
     $id = $_GET['id'];
 
-    // hapus data
-    $hapus = mysqli_query($konek, "delete from mahasiswa where id='$id'");
+   if(isset($_POST['hapus'])){
+        //hapus data
+        $hapus = mysqli_query($konek, "delete from mahasiswa where id='$id'");
 
-    // jika berhasil terhapus tampilkan pesan Terhapus
-    // kemudian kembali ke data mahasiswa
-    if($hapus)
-    {
-        echo "
-            <script>
-                alert('Terhapus');
-                location.replace('datamahasiswa.php');
-            </script>
-        ";
-    }
-    else
-    {
-        echo "
-            <script>
-                alert('Gagal Terhapus');
-                location.replace('datamahasiswa.php');
-            </script>
-        ";
-    }
+        //jika berhasil terhapus tampilkan pesan Data Berhasil Terhapus
+        //kemudian kembali ke Data Mahasiswa
+        if($hapus)
+        {
+            echo "
+                <script>
+                    alert('Data Berhasil Terhapus');
+                    location.replace('datamahasiswa.php');
+                </script>
+                ";
+        }
+        else{
+            echo "
+                <script>
+                    alert('Data Gagal Terhapus');
+                    location.replace('datamahasiswa.php');
+                </script>
+                ";
+        }
+   }
 ?>
+
+<!DOCTYPE html>
+<html>
+    <head>
+       <?php include "header.php"; ?>
+        <title>Konfirmasi Hapus Data</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+
+    </head>
+
+    <body>
+    <h3>Konfirmasi Hapus Data</h3>
+    <p>Apakah anda yakin akan menghapus data ini?</p>
+    <form method="post">
+        <input type="submit" name="hapus" value="Iya">
+        <input type="button" value="Batal" onclick="location.href='datamahasiswa.php'">
+    </form>
+
+    <?php include "footer.php"; ?>
+</body>
+</html>
+
