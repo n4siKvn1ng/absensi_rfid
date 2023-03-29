@@ -73,6 +73,15 @@
         <?php include "header.php"; ?>
         <title>Tambah Data Mahasiswa</title>
         <link rel="stylesheet" type="text/css" href="style.css">
+    
+
+        <!--Pembacaan No Kartu Otomatis-->
+        <script type="text/javascript">
+            $(document).ready(function(){setInterval(function(){
+                    $("#norfid").load('nokartu.php')
+                }, 0)
+            });
+        </script>
         
     </head>
     <body>
@@ -82,15 +91,13 @@
     <!-- isi-->
     <div class="container-fluid">
         <h3>Tambah Data Mahasiswa</h3>
+        
 
         <!-- form input -->
         <form method="POST">
-
-            <!--INPUTAN UNTUK NOMOR KARTU-->
-            <div class="form-group">
-                <label>No. Kartu</label>
-                <input type="text" name="nokartu" id="nokartu" placeholder="Nomor kartu RFID" class="form-control" style="width: 200px" required>
-            </div>
+           
+            <!-- Memanggil "nokartu.php"-->
+            <div id="norfid"></div>
 
             <!--INPUTAN UNTUK NOMOR INDUK MAHASISWA-->
             <div class="form-group">
@@ -113,3 +120,4 @@
     <?php include "footer.php"; ?>
     </body>
 </html>
+
