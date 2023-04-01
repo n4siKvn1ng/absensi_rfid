@@ -14,7 +14,6 @@
         {
             echo "
                 <script>
-                    alert('Data Berhasil Terhapus');
                     location.replace('datamahasiswa.php');
                 </script>
                 ";
@@ -22,7 +21,6 @@
         else{
             echo "
                 <script>
-                    alert('Data Gagal Terhapus');
                     location.replace('datamahasiswa.php');
                 </script>
                 ";
@@ -43,7 +41,7 @@
     <h3>Konfirmasi Hapus Data</h3>
     <p>Apakah anda yakin akan menghapus data ini?</p>
     <form method="post">
-        <input type="submit" name="hapus" value="Iya">
+        <input type="submit" name="hapus" value="Hapus">
         <input type="button" value="Batal" onclick="location.href='datamahasiswa.php'">
     </form>
 
