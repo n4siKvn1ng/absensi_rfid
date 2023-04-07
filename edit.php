@@ -40,31 +40,31 @@ $hasil_kelas = mysqli_fetch_array($cek_kelas);
             <!--INPUTAN UNTUK NOMOR KARTU-->
             <div class="form-group">
                 <label>No. Kartu</label>
-                <input type="text" name="nokartu" id="nokartu" placeholder="Nomor kartu RFID" class="form-control" style="width: 200px" required
+                <input type="text" name="nokartu" id="nokartu" placeholder="Nomor kartu RFID" class="form-control" style="width: 250px" required
                 value="<?php echo htmlspecialchars($hasil['nokartu']); ?>" requiired>
             </div>
 
             <!--INPUTAN UNTUK NAMA MAHASISWA-->
             <div class="form-group">
                 <label>Nama Mahasiswa</label>
-                <input type="text" name="nama" id="nama" placeholder="Nama Mahasiswa" class="form-control" style="width: 400px"required
+                <input type="text" name="nama" id="nama" placeholder="Nama Mahasiswa" class="form-control" style="width: 250px"required
                 value="<?php echo $hasil['nama']; ?>">
             </div>
 
-            <!--INPUTAN UNTUK KELAS PRAKTIKUM-->
+           <!--INPUTAN UNTUK KELAS PRAKTIKUM-->
             <div class="form-group">
-                <label for="id_kelas">Pilih Kelas</label><br>
-                <select name="id_kelas" style="width: 250px; height: 32px;" required>
-                <option value="">-  -  -  -  -  -  -  -</option>
+                <label for="id_kelas">Kelas Praktikum</label><br>
                 <?php
-                $tambah_kelas = mysqli_query($konek, "SELECT * FROM kelas");
-                while($data = mysqli_fetch_array($tambah_kelas)){
-                    $selected = ($data['id_kelas'] == $hasil['id_kelas']) ? 'selected' : '';
-                    echo "<option value='$data[id_kelas]' $selected>$data[kelas_praktikum]</option>";
-                }
+                    $tambah_kelas = mysqli_query($konek, "SELECT * FROM kelas");
+                    $kelas_terpilih = explode(',', $hasil['id_kelas']);
+                    while($data = mysqli_fetch_array($tambah_kelas)){
+                        ?>
+                        <div>
+                            <input type='checkbox' name='id_kelas[]' value='<?php echo $data['id_kelas'] ?>' <?php if (in_array($data['id_kelas'], $kelas_terpilih)) echo 'checked' ?>>&nbsp;<?php echo $data['kelas_praktikum'] ?>
+                        </div>
+                        <?php
+                    }
                 ?>
-                </select>
-
             </div>
 
             <button class="btn btn-primary" name="btnSimpan" >Update</button>
@@ -85,7 +85,7 @@ if(isset($_POST['btnSimpan']))
     //baca isi inputan form
     $nokartu    = $_POST['nokartu'];
     $nama       = $_POST['nama'];
-    $id_kelas   = $_POST['id_kelas'];
+    $id_kelas   = implode(",", $_POST['id_kelas']);
 
     $cek_kelas = mysqli_query($konek, "SELECT * FROM kelas WHERE id_kelas='$id_kelas'");
     if(empty($id_kelas) || $id_kelas == '0'){
@@ -129,6 +129,15 @@ if($count_kelas == 0) {
                 });
               </script>
             ";
+    } else if(strlen($nokartu) != 15) {
+        echo "<script>
+        $(document).ready(function() {
+          $('#nim_15').modal('show');
+          $('#nokartu').val('$nokartu');
+          $('#nama').val('$nama');
+          
+        });
+      </script>";
     } else if (mysqli_num_rows($cek_nama) > 0) {
         echo "
               <script>
@@ -144,7 +153,7 @@ if($count_kelas == 0) {
         $simpan = mysqli_query($konek, "UPDATE mahasiswa SET nokartu='$nokartu', nama='$nama', id_kelas='$id_kelas' WHERE id='$id'");
         if($simpan) {
             // menghapus nomor kartu dari tabel tmprfid
-            $hapus = mysqli_query($konek, "DELETE FROM `tmprfid` WHERE 1");
+           
             
             echo "
               <script>
@@ -217,6 +226,21 @@ if($count_kelas == 0) {
             <div class="modal-content">
                 <div class="modal-body" style="background-color: 	#DAA520; color: black">
                      <h4><strong>NIM sudah terdaftar. Silakan masukkan NIM lain.</strong></h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" style="color: black; border: 1px solid black; border-color: yellow" data-dismiss="modal">Kembali</button>
+                 </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Nim 15 -->
+    <div class="modal fade" id="nim_15" tabindex="-1" role="dialog" aria-labelledby="nim sama" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body" style="background-color: 	#DAA520; color: black">
+                     <h4><strong>NIM harus berjumlah 15 digit.</strong></h4>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" style="color: black; border: 1px solid black; border-color: yellow" data-dismiss="modal">Kembali</button>
