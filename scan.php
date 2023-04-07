@@ -7,22 +7,52 @@
 
        <!-- scanning membaca kartu RFID -->
        <script type="text/javascript">
+            var timeout;
             $(document).ready(function(){
-                setInterval(function(){
-                    $("#cekkartu").load('bacakartu.php') // atasi ini ya faizal, ada hubungannya dengan #nokartu di menu tambah. Kalau emang ga ada masalah berarti aman.
+                timeout = setTimeout(function(){
+                    $('header').fadeOut();
+                    $('footer').fadeOut();
                 }, 1000);
+
+                $(document).on('mousemove keydown', function(){
+                    $('header').fadeIn();
+                    $('footer').fadeIn();
+
+                    clearTimeout(timeout);
+                    timeout = setTimeout(function(){
+                        $('header').fadeOut();
+                        $('footer').fadeOut();
+                    }, 1000);
+                });
+
+                setInterval(function(){
+                    $("#cekkartu").load('bacakartu.php')
+                }, 4000);
             });
        </script>
+         <header>
+    <?php include "menu.php"; ?>
+</header>
     </head>
+  
+
     <body>
-        <?php include "menu.php"; ?>
+  
+        
 
 
         <!-- isi -->
-        <div class="container-fluid">
+        <div class="container-fluid" style="text-align: center ">
             <div id="cekkartu"></div>
         </div>
 
-        <?php include "footer.php"; ?>
+      
+
+
+        
     </body>
+    <footer style="position: fixed; bottom: 0; width: 100%; text-align: center ;">
+    <?php include "footer.php"; ?>
+</footer>
+
 </html>
