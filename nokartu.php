@@ -4,7 +4,7 @@
     //saya menggunakan pengkodisian dikarenakan mencegah tampilan error pada website dikarenakan data dianggap null
 
     //Baca isi tabel tmprfid
-$sql = mysqli_query($konek, "SELECT * from `tmprfid` ");
+$sql = mysqli_query($konek, "SELECT * from `tmprfiddaftar` ");
 if (mysqli_num_rows($sql) > 0) {
     $data = mysqli_fetch_array($sql);
     //Membaca No Kartu

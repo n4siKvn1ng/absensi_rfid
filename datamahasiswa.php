@@ -96,10 +96,16 @@
                     if(isset($_GET['q']) && $_GET['q'] != '') {
                         $keyword = $_GET['q'];
                         // query pencarian data mahasiswa
-                        $sql = mysqli_query($konek, "SELECT * FROM mahasiswa, kelas WHERE mahasiswa.id_kelas = kelas.id_kelas AND (nokartu LIKE '%$keyword%' OR nama LIKE '%$keyword%' OR kelas_praktikum LIKE '%$keyword%')");
+                        $sql = mysqli_query($konek, "SELECT mahasiswa.*, GROUP_CONCAT(kelas.kelas_praktikum SEPARATOR ', ') as kelas_praktikum 
+                                FROM mahasiswa 
+                                LEFT JOIN kelas ON FIND_IN_SET(kelas.id_kelas, mahasiswa.id_kelas) 
+                                WHERE mahasiswa.nokartu LIKE '%$keyword%' OR mahasiswa.nama LIKE '%$keyword%' OR kelas.kelas_praktikum LIKE '%$keyword%'
+                                GROUP BY mahasiswa.id");
+
                     } else {
                         // query menampilkan seluruh data mahasiswa
-                        $sql = mysqli_query($konek, "SELECT * FROM mahasiswa, kelas WHERE mahasiswa.id_kelas = kelas.id_kelas");
+                        $sql = mysqli_query($konek, "SELECT mahasiswa.*, GROUP_CONCAT(kelas.kelas_praktikum SEPARATOR ', ') as kelas_praktikum FROM mahasiswa LEFT JOIN kelas ON FIND_IN_SET(kelas.id_kelas, mahasiswa.id_kelas) GROUP BY mahasiswa.id");
+
                     }
 
                         $no = 0;
@@ -114,35 +120,41 @@
                             <td> <?php echo $data['nokartu']; ?> </td>
                             <td style="text-align: center"> <?php echo $angkatan; ?> </td> <!-- tambahkan kolom Angkatan -->
                             <td> <?php echo $data['nama']; ?> </td>
-                            <td> <?php echo $data['kelas_praktikum']; ?> </td>
+                            <td style="text-align: center;"> <?php echo $data['kelas_praktikum']; ?> </td>
                             <td style="text-align: center;">
                                 <a href="edit.php?id=<?php echo $data['id']; ?>" ><button class="btn btn-success btn-sm"><i class="fa-regular fa-pen-to-square"></i></button></a>
-                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#hapusModal">
-                                <i class="fa-solid fa-trash"></i>
-                                </button></a>
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#hapusModal<?php echo $data['id']; ?>"><i class="fa-solid fa-trash"></i></button>
+
                             </td>
                         </tr>
                         
                             
                         <?php include "koneksi.php";?>
                         <!-- Modal Hapus Mahasiswa -->
-                        <div class="modal fade" id="hapusModal" tabindex="-1" role="dialog" aria-labelledby="hapusModalLabel" aria-hidden="true">
+                      <!-- Modal Hapus Mahasiswa -->
+                    <div class="modal fade" id="hapusModal<?php echo $data['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="hapusModalLabel" aria-hidden="true">
                         <div class="modal-dialog " style="justify-content: center; margin-top: 15%; width: 350px" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h2 class="modal-title">Konfirmasi Hapus Data</h2>
+                                    <h2 class="modal-title" id="hapusModalLabel">Konfirmasi Hapus Data</h2>
+                                   
                                 </div>
-                                    <div class="modal-body">
-                                        <h4>Apakah anda yakin akan menghapus data ini?</h4>
-                                    </div>
-                                    <div class="modal-footer">
+                                <div class="modal-body">
+                                    <h4>Apakah anda yakin akan menghapus data ini?</h4>
+                                </div>
+                                <div class="modal-footer">
                                     <form action="hapus.php?id=<?php echo $data['id']; ?>" method="post">
-                                        <input type="submit"  class="btn btn-danger" name="hapus" value="Hapus">
+                                        <input type="submit" class="btn btn-danger" name="hapus" value="Hapus">
                                         <button type="button" class="btn btn-warning" data-dismiss="modal">Batal</button>
-                                        </form>
+                                    </form>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+
+                        
+                        
                         </div>
                         <?php } ?>
                 </tbody>
@@ -157,6 +169,3 @@
     <?php include "footer.php"?>
    
 </html> 
-
-
-

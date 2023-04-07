@@ -26,7 +26,7 @@
     <?php include "menu.php"; ?>
     <?php include "koneksi.php";
     //baca Data Mahasiswa berdasarkan id
-     $cari = mysqli_query($konek, "SELECT * FROM `tmprfid`");
+     $cari = mysqli_query($konek, "SELECT * FROM `tmprfiddaftar`");
      $hasil = mysqli_fetch_array($cari);
      $tambah_kelas = mysqli_query($konek, "SELECT * FROM `kelas`");
      $data = mysqli_fetch_array($tambah_kelas);
@@ -64,21 +64,18 @@
             </div>
 
             
-            
             <!--INPUTAN UNTUK KELAS PRAKTIKUM-->
             <div class="form-group">
-                <label for="id_kelas">Pilih Kelas</label><br>
-                <select name="id_kelas" style="width: 250px; height: 32px;" required>
-                    <option>-  -  -  -  -  -  -  -</option>
-                    <?php
-                    $tambah_kelas = mysqli_query($konek, "SELECT * FROM kelas");
-                    while($data = mysqli_fetch_array($tambah_kelas)){
-                        echo "<option value='$data[id_kelas]'>$data[kelas_praktikum]</option>";
-                    }
-                    ?>
-                </select>
-
+            <label for="id_kelas">Kelas Praktikum</label><br>
+            <?php
+            $tambah_kelas = mysqli_query($konek, "SELECT * FROM kelas");
+            while($data = mysqli_fetch_array($tambah_kelas)){
+                echo "<div><input type='checkbox' name='id_kelas[]' value='$data[id_kelas]'>&nbsp;$data[kelas_praktikum]</div>";
+            }
+            ?>
             </div>
+
+
 
         
             <button class="btn btn-primary" type="submit" name="btnSimpan">Simpan</button>
@@ -104,7 +101,7 @@
         //baca isi inputan form
         $nokartu    = $_POST['nokartu'];
         $nama       = $_POST['nama'];
-        $id_kelas   = $_POST['id_kelas'];
+        $id_kelas   = implode(",", $_POST['id_kelas']);
 
         $cek_kelas = mysqli_query($konek, "SELECT * FROM kelas WHERE id_kelas='$id_kelas'");
         if(empty($id_kelas) || $id_kelas == '0'){
@@ -145,6 +142,15 @@
                     });
                   </script>
                 ";
+        }  else if(strlen($nokartu) != 15) {
+            echo "<script>
+            $(document).ready(function() {
+              $('#nim_15').modal('show');
+              $('#nokartu').val('$nokartu');
+              $('#nama').val('$nama');
+              
+            });
+          </script>";
         } else if (mysqli_num_rows($cek_nama) > 0) {
             echo "
                   <script>
@@ -161,7 +167,7 @@
             
             if($simpan) {
                 // menghapus nomor kartu dari tabel tmprfid
-                $hapus = mysqli_query($konek, "DELETE FROM `tmprfid` WHERE 1");
+                $hapus = mysqli_query($konek, "DELETE FROM `tmprfiddaftar` WHERE 1");
                 
                 echo "
                   <script>
@@ -242,6 +248,21 @@
                 </div>
             </div>
         </div>
+
+         <!-- modal Nim 15 -->
+    <div class="modal fade" id="nim_15" tabindex="-1" role="dialog" aria-labelledby="nim sama" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body" style="background-color: 	#DAA520; color: black">
+                     <h4><strong>NIM harus berjumlah 15 digit.</strong></h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" style="color: black; border: 1px solid black; border-color: yellow" data-dismiss="modal">Kembali</button>
+                 </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <!-- modal Nama Sama -->
         <div class="modal fade" id="nama_sama" tabindex="-1" role="dialog" aria-labelledby="nama sama" aria-hidden="true">
