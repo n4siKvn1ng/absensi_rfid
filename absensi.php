@@ -32,24 +32,59 @@
                         // baca tanggal saat ini
                         date_default_timezone_set('Asia/Jakarta');
                         $tanggal = date('Y-m-d');
+                        $tanggal_formatted = date('d-m-Y', strtotime($tanggal));
+                       
 
                         // filter absensi berdasarkan tanggal saat ini
-                        $sql = mysqli_query($konek, "select b.nama, a.nokartu, a.nama, a.id_kelas, a.tanggal, a.jam_absensi, a.keterangan from absensi a, mahasiswa b where a.nokartu=b.nokartu and a.tanggal='$tanggal'");
+                        $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.kelas_praktikum, absen.tanggal, absen.jam_absensi, absen.keterangan 
+                        FROM absensi AS absen
+                        JOIN mahasiswa AS mhw ON absen.nokartu = mhw.nokartu
+                        JOIN kelas AS kls ON mhw.id_kelas = kls.id_kelas
+                        WHERE absen.tanggal = '$tanggal'");
 
                         $no = 0;
                         while($data = mysqli_fetch_array($sql))
-                        {
+                        { 
                             $no++;
+
+                             // konversi hari ke dalam Bahasa Indonesia
+                            switch(date('l', strtotime($data['tanggal'])))
+                            {
+                                case 'Monday':
+                                    $hari = 'Senin';
+                                    break;
+                                case 'Tuesday':
+                                    $hari = 'Selasa';
+                                    break;
+                                case 'Wednesday':
+                                    $hari = 'Rabu';
+                                    break;
+                                case 'Thursday':
+                                    $hari = 'Kamis';
+                                    break;
+                                case 'Friday':
+                                    $hari = 'Jumat';
+                                    break;
+                                case 'Saturday':
+                                    $hari = 'Sabtu';
+                                    break;
+                                case 'Sunday':
+                                    $hari = 'Minggu';
+                                    break;
+                                default:
+                                    $hari = '';
+                                    break;
+                            }
 
                     ?>
                     <tr> <!-- Ini beberapa database di bawah ini kalau emang bisa mengambil data dari database yang ada kamu ubah aja, soalnya aku ga paham logic database yang berbeda, data di bawah ini aku ambil dari database absensi -->
                         <td><?php echo $no; ?></td>
                         <td><?php echo $data['nokartu'] ?></td>
                         <td><?php echo $data['nama'] ?></td>
-                        <td><?php echo $data['id_kelas'] ?></td>
-                        <td><?php echo $data['tanggal'] ?></td>
-                        <td><?php echo $data['jam_absensi'] ?></td>
-                        <td><?php echo $data['keterangan'] ?></td>
+                        <td style="text-align: center;"><?php echo $data['kelas_praktikum'] ?></td>
+                        <td style="text-align: center;"><?php echo "$hari, $tanggal_formatted;" ?></td>
+                        <td style="text-align: center;"><?php echo $data['jam_absensi'] ?></td>
+                        <td style="text-align: center;"><?php echo $data['keterangan'] ?></td>
                     </tr>
                     <?php } ?>
                 </tbody>
