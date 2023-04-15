@@ -12,59 +12,91 @@
         <div class="container-fluid">
             <h3>Rekap Absensi</h3>
 
-            
-            <div class="table-header" style="display: inline-block;">
-            <label for="id_kelas">Pilih Kelas</label><br>
-            <select name="id_kelas" id="id_kelas" style="width: 250px; height: 32px;" required>
-                <option value="">- Pilih Kelas -</option>
-                    <?php include "koneksi.php";
-                        $filter = mysqli_query($konek, "SELECT * FROM kelas");
-                        while($data = mysqli_fetch_array($filter)){
-                        echo "<option value='$data[id_kelas]'>$data[kelas_praktikum]</option>";
+            <form method="GET" action="" id="myForm">
+    <div class="table-header" style="display: inline-block;">
+        <label for="id_kelas">Pilih Kelas</label><br>
+        <select name="id_kelas" id="id_kelas" style="width: 250px; height: 32px;" required>
+            <option value="">- Pilih Kelas -</option>
+            <?php 
+                include "koneksi.php";
+                $filter = mysqli_query($konek, "SELECT * FROM kelas");
+                while($data = mysqli_fetch_array($filter)){
+                    $selected = "";
+                    if(isset($_GET['id_kelas']) && $_GET['id_kelas'] == $data['id_kelas']){
+                        $selected = "selected";
                     }
-                    ?>
-            </select>
-            </div>
+                    echo "<option value='$data[id_kelas]' $selected>$data[kelas_praktikum]</option>";
+                }
+            ?>
+        </select>
+    </div>
 
-            <div class="table-header" style="display: inline-block; margin-left: 5px;">
-            <label for="hari">Pilih Hari</label><br>
-                <select name="hari" id="hari" style="width: 250px; height: 32px;" required>
-                    <option value="">- Pilih Hari -</option>
-                    <option value="Senin">Senin</option>
-                    <option value="Selasa">Selasa</option>
-                    <option value="Rabu">Rabu</option>
-                    <option value="Kamis">Kamis</option>
-                    <option value="Jumat">Jumat</option>
-                    <option value="Sabtu">Sabtu</option>
-                    <option value="Minggu">Minggu</option>
-                </select>
-            </div>
-
-            <button id="resetButton" style="display: none;">Reset</button>
-
-            <script>
-                const selectKelas = document.getElementById('id_kelas');
-                const selectHari = document.getElementById('hari');
-                const resetButton = document.getElementById('resetButton');
-
-                // Tambahkan event listener untuk menangkap perubahan nilai pada select
-                selectKelas.addEventListener('change', () => {
-                    resetButton.style.display = 'inline-block';
-                });
-
-                selectHari.addEventListener('change', () => {
-                    resetButton.style.display = 'inline-block';
-                });
-
-                // Tambahkan event listener untuk tombol batal
-                resetButton.addEventListener('click', () => {
-                    selectKelas.value = '';
-                    selectHari.value = '';
-                    resetButton.style.display = 'none';
-                });
-            </script>
+    <div class="table-header" style="display: inline-block; margin-left: 5px;">
+    <label for="hari">Pilih Hari</label><br>
+    <select name="hari" id="hari" style="width: 100px; height: 32px;" required>
+        <option value="">- Pilih Hari -</option>
+        <option value="1"<?php if(isset($_GET['hari']) && $_GET['hari'] == '1') echo ' selected="selected"'; ?>>Senin</option>
+        <option value="2"<?php if(isset($_GET['hari']) && $_GET['hari'] == '2') echo ' selected="selected"'; ?>>Selasa</option>
+        <option value="3"<?php if(isset($_GET['hari']) && $_GET['hari'] == '3') echo ' selected="selected"'; ?>>Rabu</option>
+        <option value="4"<?php if(isset($_GET['hari']) && $_GET['hari'] == '4') echo ' selected="selected"'; ?>>Kamis</option>
+        <option value="5"<?php if(isset($_GET['hari']) && $_GET['hari'] == '5') echo ' selected="selected"'; ?>>Jumat</option>
+        <option value="6"<?php if(isset($_GET['hari']) && $_GET['hari'] == '6') echo ' selected="selected"'; ?>>Sabtu</option>
+        <option value="7"<?php if(isset($_GET['hari']) && $_GET['hari'] == '7') echo ' selected="selected"'; ?>>Minggu</option>
+    </select>
+</div>
 
 
+    <button type="button" id="resetBtn" style="display: none; margin-left: 5px;" class="btn btn-danger" onclick="window.location.href='absensi.php?id_kelas=&hari='">Reset</button>
+
+    </form>
+    <script>
+        const selectKelas = document.getElementById('id_kelas');
+        const selectHari = document.getElementById('hari');
+        const resetBtn = document.getElementById('resetBtn');
+
+        selectKelas.addEventListener('change', () => {
+            showResetButton();
+        });
+
+        selectHari.addEventListener('change', () => {
+            showResetButton();
+        });
+
+        function showResetButton() {
+            if (selectKelas.value !== '' || selectHari.value !== '') {
+                resetBtn.style.display = 'inline-block';
+            } else {
+                resetBtn.style.display = 'none';
+            }
+        }
+
+        resetBtn.addEventListener('click', () => {
+            document.getElementById('id_kelas').value = '';
+            document.getElementById('hari').value = '';
+            resetBtn.style.display = 'none';
+            submitBtn.style.display = 'none';
+            window.location.href = "absensi.php?id_kelas=&hari=";
+           
+        });
+
+        function submitForm() {
+            document.getElementById("myForm").submit();
+        }
+
+        selectKelas.addEventListener('change', () => {
+            submitForm();
+        });
+
+        selectHari.addEventListener('change', () => {
+            submitForm();
+        });
+
+        showResetButton(); // tambahkan baris ini
+    </script>
+
+
+
+            
 
 
             <table class="table table-bordered" style="margin-top: 20px">
@@ -81,56 +113,105 @@
                     </tr>
                 </thead>
                 <tbody>
-                <?php 
-                        include "koneksi.php";
+                    <?php 
+                    include "koneksi.php";
 
-                        // baca tabel absensi dan relasikan dengan tabel mahasiswa berdasarkan nomor kartu RFID untuk tanggal hari ini
-                        // baca tanggal saat ini
-                        date_default_timezone_set('Asia/Jakarta');
-                        $tanggal = date('Y-m-d');
-                        $tanggal_formatted = date('d-m-Y', strtotime($tanggal));
+                    // baca tanggal saat ini
+                    date_default_timezone_set('Asia/Jakarta');
+                    $tanggal = date('Y-m-d');
+                    $tanggal_formatted = date('d-m-Y', strtotime($tanggal));
 
-                        // filter absensi berdasarkan tanggal saat ini
+                    // cek apakah filter kelas atau hari dipilih
+                    if (isset($_GET['id_kelas']) && !empty($_GET['id_kelas'])) {
+                        // jika filter kelas dipilih
+                        $id_kelas = $_GET['id_kelas'];
                         $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.kelas_praktikum, absen.tanggal, absen.jam_absensi, absen.keterangan 
-                        FROM absensi AS absen
-                        JOIN mahasiswa AS mhw ON absen.nokartu = mhw.nokartu
-                        JOIN kelas AS kls ON absen.id_kelas = kls.id_kelas
-                        WHERE absen.tanggal = '$tanggal'");
+                                                    FROM absensi AS absen
+                                                    JOIN mahasiswa AS mhw ON absen.nokartu = mhw.nokartu
+                                                    JOIN kelas AS kls ON absen.id_kelas = kls.id_kelas
+                                                    WHERE absen.id_kelas = '$id_kelas'");
+                    } else if (isset($_GET['hari']) && !empty($_GET['hari'])) {
+                        //mendapatkan nilai filter hari dari form
+                        $hari = $_GET['hari'];
+                      
+                        //mengubah nilai filter hari menjadi nama hari
+                        switch ($hari) {
+                          case '1':
+                            $nama_hari = "Monday";
+                            break;
+                          case '2':
+                            $nama_hari = "Tuesday";
+                            break;
+                          case '3':
+                            $nama_hari = "Wednesday";
+                            break;
+                          case '4':
+                            $nama_hari = "Thursday";
+                            break;
+                          case '5':
+                            $nama_hari = "Friday";
+                            break;
+                          case '6':
+                            $nama_hari = "Saturday";
+                            break;
+                          case '7':
+                            $nama_hari = "Sunday";
+                            break;
+                          default:
+                            $nama_hari = "";
+                            break;
+                        }
+                      
+                        //menampilkan data absensi berdasarkan filter hari yang dipilih
+                        $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.kelas_praktikum, absen.tanggal, absen.jam_absensi, absen.keterangan 
+                                                      FROM absensi AS absen
+                                                      JOIN mahasiswa AS mhw ON absen.nokartu = mhw.nokartu
+                                                      JOIN kelas AS kls ON absen.id_kelas = kls.id_kelas
+                                                      WHERE DAYNAME(absen.tanggal) = '$nama_hari'");
 
-                        $no = 0;
-                        while($data = mysqli_fetch_array($sql))
-                        { 
-                            $no++;
+                      } else {
+                        // jika tidak ada filter yang dipilih, tampilkan data sesuai dengan tanggal saat ini
+                        $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.kelas_praktikum, absen.tanggal, absen.jam_absensi, absen.keterangan 
+                                                    FROM absensi AS absen
+                                                    JOIN mahasiswa AS mhw ON absen.nokartu = mhw.nokartu
+                                                    JOIN kelas AS kls ON absen.id_kelas = kls.id_kelas
+                                                    WHERE absen.tanggal = '$tanggal'");
+                    }
+                    
 
-                             // konversi hari ke dalam Bahasa Indonesia
-                            switch(date('l', strtotime($data['tanggal'])))
-                            {
-                                case 'Monday':
-                                    $hari = 'Senin';
-                                    break;
-                                case 'Tuesday':
-                                    $hari = 'Selasa';
-                                    break;
-                                case 'Wednesday':
-                                    $hari = 'Rabu';
-                                    break;
-                                case 'Thursday':
-                                    $hari = 'Kamis';
-                                    break;
-                                case 'Friday':
-                                    $hari = 'Jumat';
-                                    break;
-                                case 'Saturday':
-                                    $hari = 'Sabtu';
-                                    break;
-                                case 'Sunday':
-                                    $hari = 'Minggu';
-                                    break;
-                                default:
-                                    $hari = '';
-                                    break;
-                            }
+                    $no = 0;
+                    while($data = mysqli_fetch_array($sql))
+                    { 
+                        $no++;
 
+                        // konversi hari ke dalam Bahasa Indonesia
+                        switch(date('l', strtotime($data['tanggal'])))
+                        {
+                            case 'Monday':
+                                $hari = 'Senin';
+                                break;
+                            case 'Tuesday':
+                                $hari = 'Selasa';
+                                break;
+                            case 'Wednesday':
+                                $hari = 'Rabu';
+                                break;
+                            case 'Thursday':
+                                $hari = 'Kamis';
+                                break;
+                            case 'Friday':
+                                $hari = 'Jumat';
+                                break;
+                            case 'Saturday':
+                                $hari = 'Sabtu';
+                                break;
+                            case 'Sunday':
+                                $hari = 'Minggu';
+                                break;
+                            default:
+                                $hari = '';
+                                break;
+                        }
                     ?>
                     <tr> <!-- Ini beberapa database di bawah ini kalau emang bisa mengambil data dari database yang ada kamu ubah aja, soalnya aku ga paham logic database yang berbeda, data di bawah ini aku ambil dari database absensi -->
                         <td><?php echo $no; ?></td>
