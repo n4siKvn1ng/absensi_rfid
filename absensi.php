@@ -11,7 +11,63 @@
         <!-- isi -->
         <div class="container-fluid">
             <h3>Rekap Absensi</h3>
-            <table class="table table-bordered">
+
+            
+            <div class="table-header" style="display: inline-block;">
+            <label for="id_kelas">Pilih Kelas</label><br>
+            <select name="id_kelas" id="id_kelas" style="width: 250px; height: 32px;" required>
+                <option value="">- Pilih Kelas -</option>
+                    <?php include "koneksi.php";
+                        $filter = mysqli_query($konek, "SELECT * FROM kelas");
+                        while($data = mysqli_fetch_array($filter)){
+                        echo "<option value='$data[id_kelas]'>$data[kelas_praktikum]</option>";
+                    }
+                    ?>
+            </select>
+            </div>
+
+            <div class="table-header" style="display: inline-block; margin-left: 5px;">
+            <label for="hari">Pilih Hari</label><br>
+                <select name="hari" id="hari" style="width: 250px; height: 32px;" required>
+                    <option value="">- Pilih Hari -</option>
+                    <option value="Senin">Senin</option>
+                    <option value="Selasa">Selasa</option>
+                    <option value="Rabu">Rabu</option>
+                    <option value="Kamis">Kamis</option>
+                    <option value="Jumat">Jumat</option>
+                    <option value="Sabtu">Sabtu</option>
+                    <option value="Minggu">Minggu</option>
+                </select>
+            </div>
+
+            <button id="resetButton" style="display: none;">Reset</button>
+
+            <script>
+                const selectKelas = document.getElementById('id_kelas');
+                const selectHari = document.getElementById('hari');
+                const resetButton = document.getElementById('resetButton');
+
+                // Tambahkan event listener untuk menangkap perubahan nilai pada select
+                selectKelas.addEventListener('change', () => {
+                    resetButton.style.display = 'inline-block';
+                });
+
+                selectHari.addEventListener('change', () => {
+                    resetButton.style.display = 'inline-block';
+                });
+
+                // Tambahkan event listener untuk tombol batal
+                resetButton.addEventListener('click', () => {
+                    selectKelas.value = '';
+                    selectHari.value = '';
+                    resetButton.style.display = 'none';
+                });
+            </script>
+
+
+
+
+            <table class="table table-bordered" style="margin-top: 20px">
                 <thead>
                     <tr style="background-color: grey; color:white; height:100%;">
                         <th style="width: 10px; text-align: center">No.</th>
@@ -25,7 +81,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
+                <?php 
                         include "koneksi.php";
 
                         // baca tabel absensi dan relasikan dengan tabel mahasiswa berdasarkan nomor kartu RFID untuk tanggal hari ini
