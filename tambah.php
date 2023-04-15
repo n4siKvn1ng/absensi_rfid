@@ -18,10 +18,27 @@
                 }, 0)
             });
         </script>
+        <script>
+$(document).ready(function() {
+    setInterval(function(){
+        $.ajax({
+            url: "get_nokartu.php",
+            dataType: "html",
+            success: function(response){
+                $("#result").html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }, 1000); // Interval setiap 1 detik
+});
+</script>
+
         
     </head>
     <body>
-   
+  
  
     <?php include "menu.php"; ?>
     <?php include "koneksi.php";
@@ -40,21 +57,8 @@
         <h3>Tambah Data Mahasiswa</h3>
 
        <!-- INPUTAN UNTUK NOMOR KARTU -->
-       <div class="form-group">
-            <label>Nomor Induk Mahasiswa (NIM)</label>
-            <?php
-                if (empty($hasil['nokartu'])) {
-                    echo '<div class="input-group">
-                            <input type="text" name="nokartu" id="nokartu" placeholder="Harap Menempelkan Kartu" class="form-control" style="width: 250px" required>
-                        </div>';
-                } else {
-                    echo '<div class="input-group">
-                            <input type="text" name="nokartu" id="nokartu" placeholder="Ubah No. Kartu sesuai NIM" class="form-control" style="width: 250px" required value="' . $hasil['nokartu'] . '">
-                        </div>';
-                }
-                
-            ?>
-        </div>
+       <div id="norfid"></div>
+    
         
 
             <!--INPUTAN UNTUK NAMA MAHASISWA-->
@@ -80,9 +84,7 @@
         
             <button class="btn btn-primary" type="submit" name="btnSimpan">Simpan</button>
             <button class="btn btn-warning" name="batal" onclick="location.href='datamahasiswa.php'">Batal</button>
-            <button id="refresh-button" class="btn btn-secondary btn-sm" style="margin-left: 2px">
-                <i class="fa-solid fa-arrows-rotate"></i>
-            </button>
+            
             
                     
         
@@ -101,15 +103,17 @@
         //baca isi inputan form
         $nokartu    = $_POST['nokartu'];
         $nama       = $_POST['nama'];
-        $id_kelas   = implode(",", $_POST['id_kelas']);
+        $id_kelas   = isset($_POST['id_kelas']) ? implode(",", $_POST['id_kelas']) : "";
 
-        $cek_kelas = mysqli_query($konek, "SELECT * FROM kelas WHERE id_kelas='$id_kelas'");
         if(empty($id_kelas) || $id_kelas == '0'){
             echo "
-                <script>
-                    alert('Kelas praktikum belum dipilih');
-                    location.href='tambahmahasiswa.php';
-                </script>
+            <script>
+            $(document).ready(function() {
+                $('#kelas_kosong').modal('show');
+                $('#nokartu').val('$nokartu');
+                $('#nama').val('$nama');
+              });
+            </script>
             ";
         }else {
 
@@ -294,18 +298,7 @@
             </div>
         </div>        
 
-        <script>
-                        document.getElementById("refresh-button").addEventListener("click", function(){
-                            location.reload();
-                        });
-
-                        document.addEventListener("keyup", function(event) {
-                        if (event.key === "Enter") {
-                            document.getElementById("btnSimpan").click();
-                        }
-                    });
-
-                    </script>
+      
 
     <?php include "footer.php"; ?>
     </body>
