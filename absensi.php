@@ -33,13 +33,12 @@
                         date_default_timezone_set('Asia/Jakarta');
                         $tanggal = date('Y-m-d');
                         $tanggal_formatted = date('d-m-Y', strtotime($tanggal));
-                       
 
                         // filter absensi berdasarkan tanggal saat ini
                         $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.kelas_praktikum, absen.tanggal, absen.jam_absensi, absen.keterangan 
                         FROM absensi AS absen
                         JOIN mahasiswa AS mhw ON absen.nokartu = mhw.nokartu
-                        JOIN kelas AS kls ON mhw.id_kelas = kls.id_kelas
+                        JOIN kelas AS kls ON absen.id_kelas = kls.id_kelas
                         WHERE absen.tanggal = '$tanggal'");
 
                         $no = 0;
