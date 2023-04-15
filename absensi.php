@@ -46,7 +46,7 @@
 </div>
 
 
-    <button type="button" id="resetBtn" style="display: none; margin-left: 5px;" class="btn btn-danger" onclick="window.location.href='absensi.php?id_kelas=&hari='">Reset</button>
+    <button type="button" id="resetBtn" style="display: none; margin-left: 5px;height: 32px;" class="btn btn-danger" onclick="window.location.href='absensi.php'">Reset</button>
 
     </form>
     <script>
@@ -119,7 +119,6 @@
                     // baca tanggal saat ini
                     date_default_timezone_set('Asia/Jakarta');
                     $tanggal = date('Y-m-d');
-                    $tanggal_formatted = date('d-m-Y', strtotime($tanggal));
 
                     // cek apakah filter kelas atau hari dipilih
                     if (isset($_GET['id_kelas']) && !empty($_GET['id_kelas'])) {
@@ -214,11 +213,11 @@
                         }
                     ?>
                     <tr> <!-- Ini beberapa database di bawah ini kalau emang bisa mengambil data dari database yang ada kamu ubah aja, soalnya aku ga paham logic database yang berbeda, data di bawah ini aku ambil dari database absensi -->
-                        <td><?php echo $no; ?></td>
+                        <td style="text-align: center;"><?php echo $no; ?></td>
                         <td><?php echo $data['nokartu'] ?></td>
                         <td><?php echo $data['nama'] ?></td>
                         <td style="text-align: center;"><?php echo $data['kelas_praktikum'] ?></td>
-                        <td style="text-align: center;"><?php echo "$hari, $tanggal_formatted;" ?></td>
+                        <td style="text-align: center;"><?php echo "$hari, " . date("d-m-Y", strtotime($data['tanggal'])); ?></td>
                         <td style="text-align: center;"><?php echo $data['jam_absensi'] ?></td>
                         <td style="text-align: center;"><?php echo $data['keterangan'] ?></td>
                     </tr>
