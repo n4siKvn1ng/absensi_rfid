@@ -49,10 +49,6 @@
             // tanggal dan jam hari ini
             $tanggal = date('Y-m-d');
             $jam_absen = date('H:i:s');
-
-            //cek di tabel absensi, apakah nomor kartu tersebut sudah ada sesuai tanggal saat ini, apabila sudah ada maka dianggap masuk
-            $cari_absen = mysqli_query($konek, "SELECT * FROM absensi WHERE nokartu='$nokartu' and tanggal='$tanggal'");
-            $jumlah_absen = mysqli_num_rows($cari_absen);
             
             $data_mahasiswa1 = mysqli_fetch_array($cari_mahasiswa);
             $id_kelas = explode(',', $data_mahasiswa1['id_kelas']);
@@ -65,6 +61,9 @@
             for ($i=0; $i < $countDt ; $i++) : 
                 $cari_mahasiswa1 = mysqli_query($konek, "SELECT m.*, k.kelas_praktikum, k.jam , k.hari FROM mahasiswa m JOIN kelas k ON '$id_kelas[$i]'=k.id_kelas WHERE m.nokartu = '$nokartu'");
                 $jmlhDt = mysqli_fetch_all($cari_mahasiswa1, MYSQLI_ASSOC);
+                //cek di tabel absensi, apakah nomor kartu tersebut sudah ada sesuai tanggal saat ini, apabila sudah ada maka dianggap masuk
+                $cari_absen = mysqli_query($konek, "SELECT * FROM absensi WHERE nokartu='$nokartu' and tanggal='$tanggal' and id_kelas='$id_kelas[$i]'");
+                 $jumlah_absen = mysqli_num_rows($cari_absen);
                     foreach ($jmlhDt as $getDtMhs) :
                         $nama = $getDtMhs['nama'];
                         $kelas_praktikum = $getDtMhs['kelas_praktikum'];
@@ -100,7 +99,7 @@
                                             $keterangan = 'Terlambat - -'.$durasi_terlambat.' menit- -';
                                         }
                                         
-                                        mysqli_query($konek, "INSERT into absensi(nokartu, tanggal, jam_absensi, keterangan)values('$nokartu', '$tanggal', '$jam_absen', '$keterangan')");
+                                        mysqli_query($konek, "INSERT into absensi(nokartu, id_kelas, tanggal, jam_absensi, keterangan)values('$nokartu','$id_kelas[$i]', '$tanggal', '$jam_absen', '$keterangan')");
                                         $check = true;
                                 }
                                 else{
