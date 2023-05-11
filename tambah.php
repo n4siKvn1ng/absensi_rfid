@@ -32,21 +32,25 @@
         <form id="form-mahasiswa" method="POST">
             <!-- form input -->
             <div class="container-fluid">
+            
             <h3>Tambah Data Mahasiswa</h3>
-
+           
                 <!-- INPUTAN UNTUK NOMOR KARTU-->
                 <div id="tampilnomor"></div>
+            
                 <div class="form-group">
                     <label>Nomor Induk Mahasiswa (NIM)</label>
                    <div class="input-group">
                         <input type="text" name="nokartu" id="nokartu" placeholder="Ubah No. Kartu sesuai NIM" class="form-control" style="width: 250px" required>
+                        
                     </div>
                 </div>
-            
+                
                 <!--INPUTAN UNTUK NAMA MAHASISWA-->
                 <div class="form-group">
                     <label>Nama Mahasiswa</label>
                     <input type="text" name="nama" id="nama" placeholder="Nama Mahasiswa" class="form-control" style="width: 250px" required>
+                    
                 </div>
 
                 <!--INPUTAN UNTUK KELAS PRAKTIKUM-->
@@ -139,6 +143,7 @@
                                     $('#pesan_berhasil').modal('show');
                                     });
                                 </script>";
+                                mysqli_query($konek, "delete from tmprfidscan");
                             } else {
                                 echo "
                                 <script>

@@ -17,11 +17,13 @@
         if (empty($hasil['nokartu'])) {
             echo '<div class="input-group">
                     <input type="text" name="tampilnomor" id="nokartu" placeholder="Harap Menempelkan Kartu" class="form-control" style="width: 250px" readonly>
+                   <br><label style="color: red; font-size: smaller;">*Pastikan Kartu Tetap Menempel Pada RFID</label>
                 </div>';
         } else {
             echo '<div class="input-group">
                     <input type="text" name="tampilnomor" id="nokartu" placeholder="Ubah No. Kartu sesuai NIM" class="form-control" style="width: 250px" readonly value="' . $hasil['nokartu'] . '">
-                </div>';
+                    <br><label style="color: red; font-size: smaller;">*Pastikan Kartu Tetap Menempel Pada RFID</label>
+                    </div>';
         }
     ?>
 </div>
