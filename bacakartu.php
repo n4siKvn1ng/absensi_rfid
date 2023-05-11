@@ -1,6 +1,6 @@
 <?php
     include "koneksi.php";
-
+   
     // baca tabel status untuk mode absensi
     $sql = mysqli_query($konek, "SELECT * FROM status");
     $data = mysqli_fetch_array($sql);
