@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2023 at 09:02 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
+-- Waktu pembuatan: 30 Bulan Mei 2023 pada 14.38
+-- Versi server: 10.4.27-MariaDB
+-- Versi PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `absensi`
+-- Struktur dari tabel `absensi`
 --
 
 CREATE TABLE `absensi` (
@@ -37,7 +37,7 @@ CREATE TABLE `absensi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `absensi`
+-- Dumping data untuk tabel `absensi`
 --
 
 INSERT INTO `absensi` (`id`, `nokartu`, `id_kelas`, `tanggal`, `jam_absensi`, `keterangan`) VALUES
@@ -47,34 +47,35 @@ INSERT INTO `absensi` (`id`, `nokartu`, `id_kelas`, `tanggal`, `jam_absensi`, `k
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kelas`
+-- Struktur dari tabel `kelas`
 --
 
 CREATE TABLE `kelas` (
-  `id_kelas` int(2) NOT NULL,
-  `kelas_praktikum` varchar(30) NOT NULL,
+  `id_kelas` int(5) NOT NULL,
+  `kelas_praktikum` varchar(36) NOT NULL,
+  `singkatan` varchar(10) NOT NULL,
   `hari` varchar(20) NOT NULL,
   `jam` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `kelas`
+-- Dumping data untuk tabel `kelas`
 --
 
-INSERT INTO `kelas` (`id_kelas`, `kelas_praktikum`, `hari`, `jam`) VALUES
-(1, 'PBO A', 'Thursday', '12:00:00'),
-(2, 'PBO B', 'Tuesday', '09:00:00'),
-(3, 'PROGDAS A', 'Thursday', '12:00:23'),
-(4, 'PROGDAS B', 'Wednesday', '00:20:23'),
-(5, 'PROGDAS C', 'Thursday', '13:00:00'),
-(6, 'PROGDAS G', 'Friday', '00:00:00'),
-(7, 'STRUKTUR DATA E', 'Thursday', '15:00:00'),
-(8, 'PBO C', 'Saturday', '20:24:52');
+INSERT INTO `kelas` (`id_kelas`, `kelas_praktikum`, `singkatan`, `hari`, `jam`) VALUES
+(1505, 'Pemrograman Beriorientasi Objek A', 'PBO A', 'Thursday', '12:00:00'),
+(1506, 'Pemrograman Beriorientasi Objek B', 'PBO B', 'Tuesday', '09:00:00'),
+(1507, 'Pemrograman Beriorientasi Objek C', 'PBO C', 'Saturday', '20:24:52'),
+(1601, 'Pemrograman Dasar A', 'PROGDAS A', 'Thursday', '12:00:23'),
+(1602, 'Pemrograman Dasar B', 'PROGDAS B', 'Wednesday', '00:20:23'),
+(1603, 'Pemrograman Dasar C', 'PROGDAS C', 'Thursday', '13:00:00'),
+(1604, 'Pemrograman Dasar D', 'PROGDAS D', 'Friday', '00:00:00'),
+(1705, 'STRUKTUR DATA E', 'STRUKDAT E', 'Thursday', '15:00:00');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kirimdata`
+-- Struktur dari tabel `kirimdata`
 --
 
 CREATE TABLE `kirimdata` (
@@ -84,7 +85,7 @@ CREATE TABLE `kirimdata` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mahasiswa`
+-- Struktur dari tabel `mahasiswa`
 --
 
 CREATE TABLE `mahasiswa` (
@@ -94,35 +95,10 @@ CREATE TABLE `mahasiswa` (
   `id_kelas` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `mahasiswa`
---
-
-INSERT INTO `mahasiswa` (`id`, `nokartu`, `nama`, `id_kelas`) VALUES
-(57, '202210370311408', 'Zul Razak', '1'),
-(58, '202210370311406', 'Abdul Salam', '3');
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `nolab`
---
-
-CREATE TABLE `nolab` (
-  `lab` varchar(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `nolab`
---
-
-INSERT INTO `nolab` (`lab`) VALUES
-('');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `status`
+-- Struktur dari tabel `status`
 --
 
 CREATE TABLE `status` (
@@ -130,7 +106,7 @@ CREATE TABLE `status` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `status`
+-- Dumping data untuk tabel `status`
 --
 
 INSERT INTO `status` (`mode`) VALUES
@@ -139,24 +115,17 @@ INSERT INTO `status` (`mode`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tmprfiddaftar`
+-- Struktur dari tabel `tmprfiddaftar`
 --
 
 CREATE TABLE `tmprfiddaftar` (
   `nokartu` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tmprfiddaftar`
---
-
-INSERT INTO `tmprfiddaftar` (`nokartu`) VALUES
-('219942953');
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tmprfidscan`
+-- Struktur dari tabel `tmprfidscan`
 --
 
 CREATE TABLE `tmprfidscan` (
@@ -164,76 +133,69 @@ CREATE TABLE `tmprfidscan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tmprfidscan`
---
-
-INSERT INTO `tmprfidscan` (`nokartu`) VALUES
-('202210370311406');
-
---
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `absensi`
+-- Indeks untuk tabel `absensi`
 --
 ALTER TABLE `absensi`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `kelas`
+-- Indeks untuk tabel `kelas`
 --
 ALTER TABLE `kelas`
   ADD PRIMARY KEY (`id_kelas`);
 
 --
--- Indexes for table `kirimdata`
+-- Indeks untuk tabel `kirimdata`
 --
 ALTER TABLE `kirimdata`
   ADD PRIMARY KEY (`nokartu`);
 
 --
--- Indexes for table `mahasiswa`
+-- Indeks untuk tabel `mahasiswa`
 --
 ALTER TABLE `mahasiswa`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `nolab`
---
-ALTER TABLE `nolab`
-  ADD PRIMARY KEY (`lab`);
-
---
--- Indexes for table `status`
+-- Indeks untuk tabel `status`
 --
 ALTER TABLE `status`
   ADD PRIMARY KEY (`mode`);
 
 --
--- Indexes for table `tmprfiddaftar`
+-- Indeks untuk tabel `tmprfiddaftar`
 --
 ALTER TABLE `tmprfiddaftar`
   ADD PRIMARY KEY (`nokartu`);
 
 --
--- Indexes for table `tmprfidscan`
+-- Indeks untuk tabel `tmprfidscan`
 --
 ALTER TABLE `tmprfidscan`
   ADD PRIMARY KEY (`nokartu`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `absensi`
+-- AUTO_INCREMENT untuk tabel `absensi`
 --
 ALTER TABLE `absensi`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
--- AUTO_INCREMENT for table `mahasiswa`
+-- AUTO_INCREMENT untuk tabel `kelas`
+--
+ALTER TABLE `kelas`
+  MODIFY `id_kelas` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1706;
+
+--
+-- AUTO_INCREMENT untuk tabel `mahasiswa`
 --
 ALTER TABLE `mahasiswa`
   MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
