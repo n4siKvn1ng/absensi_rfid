@@ -134,6 +134,7 @@
                 }
             }
         }
+        mysqli_query($konek, "INSERT into notif_device(kode) values('$kode')");
         //kosongkan tabel tmprfid
         mysqli_query($konek, "DELETE FROM tmprfidscan");
         
