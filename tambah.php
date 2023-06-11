@@ -59,7 +59,7 @@
                     <?php
                     $tambah_kelas = mysqli_query($konek, "SELECT * FROM kelas");
                     while($data = mysqli_fetch_array($tambah_kelas)){
-                        echo "<div><input type='checkbox' name='id_kelas[]' value='$data[id_kelas]'>&nbsp;$data[kelas_praktikum]</div>";
+                        echo "<div><input type='checkbox' name='id_kelas[]' value='$data[id_kelas]'>&nbsp;$data[singkatan]</div>";
                     }?>
                 </div>
 

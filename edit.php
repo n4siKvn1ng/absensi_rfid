@@ -46,21 +46,49 @@
                     value="<?php echo $hasil['nama']; ?>">
                 </div>
 
-                <!--INPUTAN UNTUK KELAS PRAKTIKUM-->
                 <div class="form-group">
-                    <label for="id_kelas">Kelas Praktikum</label><br>
-                    <?php
+                <label for="id_kelas">Kelas Praktikum</label><br>
+                <div style="display: flex; justify-content: wrap">
+                    <div style="width: 150px">
+                        <?php
                         $tambah_kelas = mysqli_query($konek, "SELECT * FROM kelas");
                         $kelas_terpilih = explode(',', $hasil['id_kelas']);
-                        while($data = mysqli_fetch_array($tambah_kelas)){
-                            ?>
-                            <div>
-                                <input type='checkbox' name='id_kelas[]' value='<?php echo $data['id_kelas'] ?>' <?php if (in_array($data['id_kelas'], $kelas_terpilih)) echo 'checked' ?>>&nbsp;<?php echo $data['kelas_praktikum'] ?>
-                            </div>
-                            <?php
+                        $total_data = mysqli_num_rows($tambah_kelas);
+                        $left_data = ceil($total_data / 2); // Jumlah data di sebelah kiri
+                        $counter = 0;
+
+                        while ($data = mysqli_fetch_array($tambah_kelas)) {
+                            if ($counter < $left_data) {
+                                ?>
+                                <div style="width: 100%;">
+                                    <input type='checkbox' name='id_kelas[]' value='<?php echo $data['id_kelas'] ?>' <?php if (in_array($data['id_kelas'], $kelas_terpilih)) echo 'checked' ?>>&nbsp;<?php echo $data['singkatan'] ?>
+                                </div>
+                                <?php
+                            }
+                            $counter++;
                         }
-                    ?>
+                        ?>
+                    </div>
+                    <div style="width: 150px">
+                        <?php
+                        mysqli_data_seek($tambah_kelas, 0); // Mengembalikan kursor ke awal hasil query
+                        $counter = 0;
+
+                        while ($data = mysqli_fetch_array($tambah_kelas)) {
+                            if ($counter >= $left_data) {
+                                ?>
+                                <div style="width: 100%;">
+                                    <input type='checkbox' name='id_kelas[]' value='<?php echo $data['id_kelas'] ?>' <?php if (in_array($data['id_kelas'], $kelas_terpilih)) echo 'checked' ?>>&nbsp;<?php echo $data['singkatan'] ?>
+                                </div>
+                                <?php
+                            }
+                            $counter++;
+                        }
+                        ?>
+                    </div>
                 </div>
+            </div>
+
 
                 <button class="btn btn-primary" name="btnSimpan" >Update</button>
                 <button class="btn btn-warning" name="batal" onclick="location.href='datamahasiswa.php'">Batal</button>

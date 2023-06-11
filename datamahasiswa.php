@@ -97,15 +97,15 @@
                     if(isset($_GET['q']) && $_GET['q'] != '') {
                         $keyword = $_GET['q'];
                         // query pencarian data mahasiswa
-                        $sql = mysqli_query($konek, "SELECT mahasiswa.*, GROUP_CONCAT(kelas.kelas_praktikum SEPARATOR ', ') as kelas_praktikum 
+                        $sql = mysqli_query($konek, "SELECT mahasiswa.*, GROUP_CONCAT(kelas.singkatan SEPARATOR ', ') as singkatan 
                                 FROM mahasiswa 
                                 LEFT JOIN kelas ON FIND_IN_SET(kelas.id_kelas, mahasiswa.id_kelas) 
-                                WHERE mahasiswa.nokartu LIKE '%$keyword%' OR mahasiswa.nama LIKE '%$keyword%' OR kelas.kelas_praktikum LIKE '%$keyword%'
+                                WHERE mahasiswa.nokartu LIKE '%$keyword%' OR mahasiswa.nama LIKE '%$keyword%' OR kelas.singkatan LIKE '%$keyword%'
                                 GROUP BY mahasiswa.id");
 
                     } else {
                         // query menampilkan seluruh data mahasiswa
-                        $sql = mysqli_query($konek, "SELECT mahasiswa.*, GROUP_CONCAT(kelas.kelas_praktikum SEPARATOR ', ') as kelas_praktikum FROM mahasiswa LEFT JOIN kelas ON FIND_IN_SET(kelas.id_kelas, mahasiswa.id_kelas) GROUP BY mahasiswa.id");
+                        $sql = mysqli_query($konek, "SELECT mahasiswa.*, GROUP_CONCAT(kelas.singkatan SEPARATOR ', ') as singkatan FROM mahasiswa LEFT JOIN kelas ON FIND_IN_SET(kelas.id_kelas, mahasiswa.id_kelas) GROUP BY mahasiswa.id");
 
                     }
 
@@ -118,10 +118,10 @@
                     
                         <tr>
                             <td style="text-align: center"> <?php echo $no; ?> </td>
-                            <td> <?php echo $data['nokartu']; ?> </td>
+                            <td style="text-align: center"> <?php echo $data['nokartu']; ?> </td>
                             <td style="text-align: center"> <?php echo $angkatan; ?> </td> <!-- tambahkan kolom Angkatan -->
-                            <td> <?php echo $data['nama']; ?> </td>
-                            <td style="text-align: center;"> <?php echo $data['kelas_praktikum']; ?> </td>
+                            <td style="text-align: center"> <?php echo $data['nama']; ?> </td>
+                            <td style="text-align: center;"> <?php echo $data['singkatan']; ?> </td>
                             <td style="text-align: center;">
                                 <a href="edit.php?id=<?php echo $data['id']; ?>" ><button class="btn btn-success btn-sm"><i class="fa-regular fa-pen-to-square"></i></button></a>
                                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#hapusModal<?php echo $data['id']; ?>"><i class="fa-solid fa-trash"></i></button>
