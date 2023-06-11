@@ -25,7 +25,7 @@
                     if(isset($_GET['id_kelas']) && $_GET['id_kelas'] == $data['id_kelas']){
                         $selected = "selected";
                     }
-                    echo "<option value='$data[id_kelas]' $selected>$data[kelas_praktikum]</option>";
+                    echo "<option value='$data[id_kelas]' $selected>$data[singkatan]</option>";
                 }
             ?>
         </select>
@@ -124,7 +124,7 @@
                     if (isset($_GET['id_kelas']) && !empty($_GET['id_kelas'])) {
                         // jika filter kelas dipilih
                         $id_kelas = $_GET['id_kelas'];
-                        $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.kelas_praktikum, absen.tanggal, absen.jam_absensi, absen.keterangan 
+                        $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.singkatan, absen.tanggal, absen.jam_absensi, absen.keterangan 
                                                     FROM absensi AS absen
                                                     JOIN mahasiswa AS mhw ON absen.nokartu = mhw.nokartu
                                                     JOIN kelas AS kls ON absen.id_kelas = kls.id_kelas
@@ -162,7 +162,7 @@
                         }
                       
                         //menampilkan data absensi berdasarkan filter hari yang dipilih
-                        $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.kelas_praktikum, absen.tanggal, absen.jam_absensi, absen.keterangan 
+                        $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.singkatan, absen.tanggal, absen.jam_absensi, absen.keterangan 
                                                       FROM absensi AS absen
                                                       JOIN mahasiswa AS mhw ON absen.nokartu = mhw.nokartu
                                                       JOIN kelas AS kls ON absen.id_kelas = kls.id_kelas
@@ -170,7 +170,7 @@
 
                       } else {
                         // jika tidak ada filter yang dipilih, tampilkan data sesuai dengan tanggal saat ini
-                        $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.kelas_praktikum, absen.tanggal, absen.jam_absensi, absen.keterangan 
+                        $sql = mysqli_query($konek, "SELECT mhw.nama, absen.nokartu, kls.singkatan, absen.tanggal, absen.jam_absensi, absen.keterangan 
                                                     FROM absensi AS absen
                                                     JOIN mahasiswa AS mhw ON absen.nokartu = mhw.nokartu
                                                     JOIN kelas AS kls ON absen.id_kelas = kls.id_kelas
@@ -216,7 +216,7 @@
                         <td style="text-align: center;"><?php echo $no; ?></td>
                         <td><?php echo $data['nokartu'] ?></td>
                         <td><?php echo $data['nama'] ?></td>
-                        <td style="text-align: center;"><?php echo $data['kelas_praktikum'] ?></td>
+                        <td style="text-align: center;"><?php echo $data['singkatan'] ?></td>
                         <td style="text-align: center;"><?php echo "$hari, " . date("d-m-Y", strtotime($data['tanggal'])); ?></td>
                         <td style="text-align: center;"><?php echo $data['jam_absensi'] ?></td>
                         <td style="text-align: center;"><?php echo $data['keterangan'] ?></td>

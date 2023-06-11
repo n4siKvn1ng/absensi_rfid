@@ -18,7 +18,6 @@
     $nokartu = "";
     if (!is_null($data_kartu)) {
         $nokartu = $data_kartu['nokartu'];
-        $nolab = $data_kartu['no_lab'];
     }
 ?>
 
@@ -37,7 +36,7 @@
     <?php 
     } else {
     
-        $cari_mahasiswa = mysqli_query($konek, "SELECT m.*,k.id_lab, k.kelas_praktikum, k.jam , k.hari FROM mahasiswa m JOIN kelas k ON m.id_kelas=k.id_kelas WHERE m.nokartu = '$nokartu'");
+        $cari_mahasiswa = mysqli_query($konek, "SELECT m.*, k.kelas_praktikum, k.jam , k.hari FROM mahasiswa m JOIN kelas k ON m.id_kelas=k.id_kelas WHERE m.nokartu = '$nokartu'");
         $jumlah_data = mysqli_num_rows($cari_mahasiswa);
 
         if ($jumlah_data == 0) {
@@ -61,7 +60,7 @@
             $data_hari = false;
             $data_jam = false;
             for ($i=0; $i < $countDt ; $i++) : 
-                $cari_mahasiswa1 = mysqli_query($konek, "SELECT m.*,k.id_lab, k.kelas_praktikum, k.jam , k.hari FROM mahasiswa m JOIN kelas k ON '$id_kelas[$i]'=k.id_kelas WHERE m.nokartu = '$nokartu'");
+                $cari_mahasiswa1 = mysqli_query($konek, "SELECT m.*, k.kelas_praktikum, k.jam , k.hari FROM mahasiswa m JOIN kelas k ON '$id_kelas[$i]'=k.id_kelas WHERE m.nokartu = '$nokartu'");
                 $jmlhDt = mysqli_fetch_all($cari_mahasiswa1, MYSQLI_ASSOC);
                 //cek di tabel absensi, apakah nomor kartu tersebut sudah ada sesuai tanggal saat ini, apabila sudah ada maka dianggap masuk
                 $cari_absen = mysqli_query($konek, "SELECT * FROM absensi WHERE nokartu='$nokartu' and tanggal='$tanggal' and id_kelas='$id_kelas[$i]'");
@@ -71,11 +70,7 @@
                         $kelas_praktikum = $getDtMhs['kelas_praktikum'];
                         $jam_kelas = $getDtMhs['jam'];
                         $hari_kelas = $getDtMhs['hari'];
-                        $ver_nolab = $getDtMhs['id_lab'];
-                        $nama_lab = mysqli_query($konek, "SELECT nama_lab FROM lab WHERE id_lab = '$nolab'");
-                        $hasil_nama_lab = mysqli_fetch_array($nama_lab, MYSQLI_ASSOC);
-                        $LAB = $hasil_nama_lab['nama_lab'];
-
+                        
 
                         // mengubah jam kelas menjadi format waktu
                         $jam_kelas = DateTime::createFromFormat('H:i:s', $jam_kelas);
@@ -85,7 +80,7 @@
                         $jam_kelas_110_menit = strtotime('+110 minutes', $jam_kelas);
 
                         // jika hari saat ini sama dengan hari kelas, maka bisa melakukan absensi
-                        if($ver_nolab==$nolab){
+                
                             $lab_ada = true;
                             if (strtolower($hari_ini) == strtolower($hari_kelas)) {
                                 $data_hari = true; 
@@ -98,7 +93,7 @@
                                         $jam_kelas = DateTime::createFromFormat('H:i:s', $data_kelas['jam']);
                                         $jam_kelas = $jam_kelas->getTimestamp();
                         
-                                            echo "<h1 >Selamat Datang, $nama.<br>Di Kelas $kelas_praktikum pada $LAB.</h1>";
+                                            echo "<h1 >Selamat Datang, $nama.<br>Di Kelas $kelas_praktikum.</h1>";
                                             $waktu_terlambat = strtotime('+15 minutes', $jam_kelas);
                                             if (strtotime($jam_absen) <= $waktu_terlambat) {
                                                 $keterangan = '<strong>Tepat Waktu</strong>';
@@ -122,19 +117,16 @@
                                 $data_hari = false;
                             
                             }
-                        } 
+                        
                     endforeach;
                 endfor;    
                 
             if (!$check) {
-                if($lab_ada == false ){
-                    echo "<h1>Maaf, $nama.<br>Kelas Anda tidak berada pada $LAB.</h1>";
-                } 
-                    
-                if ($lab_ada==true && !$data_hari) {
+                  
+                if (!$data_hari) {
                     echo "<h1>Maaf, $nama.<br>Hari ini bukan hari kelas Anda</h1>";
                 }
-                if($lab_ada==true && ($data_hari == true) && !($data_jam)){
+                if(($data_hari == true) && !($data_jam)){
                     echo "<h1>Maaf, $nama.<br>Anda Tidak Memiliki Kelas Pada Saat Ini</h1>";
                 }
 
