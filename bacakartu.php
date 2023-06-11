@@ -38,8 +38,10 @@
     
         $cari_mahasiswa = mysqli_query($konek, "SELECT m.*, k.kelas_praktikum, k.jam , k.hari FROM mahasiswa m JOIN kelas k ON m.id_kelas=k.id_kelas WHERE m.nokartu = '$nokartu'");
         $jumlah_data = mysqli_num_rows($cari_mahasiswa);
-
+        
+        $kode;
         if ($jumlah_data == 0) {
+            $kode = 1;
             echo "<h1>Maaf, Kartu Tidak Terdaftar</h1>";
 
         } else {
@@ -54,7 +56,6 @@
             $id_kelas = explode(',', $data_mahasiswa1['id_kelas']);
             $countDt = count($id_kelas);
             $check = false ?? 0;
-            $lab_ada = false;
             $hari_kelas ;
             $jam_kelas;
             $data_hari = false;
@@ -78,13 +79,13 @@
 
                         // menambahkan 110 menit ke jam kelas
                         $jam_kelas_110_menit = strtotime('+110 minutes', $jam_kelas);
-
-                        // jika hari saat ini sama dengan hari kelas, maka bisa melakukan absensi
-                
-                            $lab_ada = true;
+                            
+                            $kode = 2;
                             if (strtolower($hari_ini) == strtolower($hari_kelas)) {
+                                $kode = 3;
                                 $data_hari = true; 
                                 if(time() >= $jam_kelas && time() <= $jam_kelas_110_menit) { 
+                                    $kode = 4;
                                     $data_jam = true;
                                     if($jumlah_absen == 0){
                                         // cek apakah nokartu tersebut terdaftar pada tabel kelas
@@ -101,6 +102,8 @@
                                                 $durasi_terlambat = round((strtotime($jam_absen) - $waktu_terlambat) / 60);
                                                 $keterangan = 'Terlambat - -'.$durasi_terlambat.' menit- -';
                                             }
+                                        
+                                            $kode = 5;
                                             
                                             mysqli_query($konek, "INSERT into absensi(nokartu, id_kelas, tanggal, jam_absensi, keterangan)values('$nokartu','$id_kelas[$i]', '$tanggal', '$jam_absen', '$keterangan')");
                                             $check = true;
@@ -129,7 +132,6 @@
                 if(($data_hari == true) && !($data_jam)){
                     echo "<h1>Maaf, $nama.<br>Anda Tidak Memiliki Kelas Pada Saat Ini</h1>";
                 }
-
             }
         }
         //kosongkan tabel tmprfid
