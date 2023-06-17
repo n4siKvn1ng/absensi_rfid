@@ -269,6 +269,8 @@
                     <h4><strong>Data Berhasil Tersimpan</strong></h4>
                 </div>
                 <div class="modal-footer">
+                     <h4>Tekan tombol "OKE"</h4>
+                     <h4>Lalu tempelkan ulang kartu RFID</h4>
                     <button type="button" class="btn btn-secondary" style="color: blue; border: 1px solid black; border-color: blue" data-dismiss="modal" onclick="window.location.href='datamahasiswa.php'">Oke</button>
                 </div>
             </div>

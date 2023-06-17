@@ -37,18 +37,10 @@
   
 
     <body>
-  
-        
-
-
         <!-- isi -->
         <div class="container-fluid" style="text-align: center ">
             <div id="cekkartu"></div>
         </div>
-
-      
-
-
         
     </body>
     <footer style="position: fixed; bottom: 0; width: 100%; text-align: center ;">

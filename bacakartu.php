@@ -39,7 +39,7 @@
         $cari_mahasiswa = mysqli_query($konek, "SELECT m.*, k.kelas_praktikum, k.jam , k.hari FROM mahasiswa m JOIN kelas k ON m.id_kelas=k.id_kelas WHERE m.nokartu = '$nokartu'");
         $jumlah_data = mysqli_num_rows($cari_mahasiswa);
         
-        $kode;
+        $kode = 1;
         if ($jumlah_data == 0) {
             $kode = 1;
             echo "<h1>Maaf, Kartu Tidak Terdaftar</h1>";
@@ -72,14 +72,12 @@
                         $jam_kelas = $getDtMhs['jam'];
                         $hari_kelas = $getDtMhs['hari'];
                         
-
                         // mengubah jam kelas menjadi format waktu
                         $jam_kelas = DateTime::createFromFormat('H:i:s', $jam_kelas);
                         $jam_kelas = $jam_kelas->getTimestamp();
 
                         // menambahkan 110 menit ke jam kelas
                         $jam_kelas_110_menit = strtotime('+110 minutes', $jam_kelas);
-                            
                             $kode = 2;
                             if (strtolower($hari_ini) == strtolower($hari_kelas)) {
                                 $kode = 3;
@@ -120,23 +118,24 @@
                                 $data_hari = false;
                             
                             }
-                        
                     endforeach;
                 endfor;    
                 
             if (!$check) {
                   
                 if (!$data_hari) {
-                    echo "<h1>Maaf, $nama.<br>Hari ini bukan hari kelas Anda</h1>";
+                    echo "<h1>Maaf, $nama.<br>Tidak Ada Jadwal Hari Ini</h1>";
                 }
                 if(($data_hari == true) && !($data_jam)){
                     echo "<h1>Maaf, $nama.<br>Anda Tidak Memiliki Kelas Pada Saat Ini</h1>";
                 }
             }
+            
         }
+        mysqli_query($konek, "delete from notif_device");
+        sleep(1);
         mysqli_query($konek, "INSERT into notif_device(kode) values('$kode')");
         //kosongkan tabel tmprfid
         mysqli_query($konek, "DELETE FROM tmprfidscan");
-        
     }?>
 </div>
