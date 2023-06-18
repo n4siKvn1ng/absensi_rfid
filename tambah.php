@@ -243,12 +243,15 @@
                 <div class="modal-body" style="background-color: green; color: white">
                     <h4><strong>Data Berhasil Tersimpan</strong></h4>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" style="color: blue; border: 1px solid black; border-color: blue" data-dismiss="modal" onclick="window.location.href='datamahasiswa.php'">Oke</button>
+                <div class="modal-body">
+                    <h4>Silahkan Tekan "OKE"</h4>
+                    <h4>Tempelkan Ulang Kartu RFID</h4>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" style="color: blue; border: 1px solid black; border-color: blue" data-dismiss="modal" onclick="window.location.href='datamahasiswa.php'">Oke</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- modal Gagal -->
