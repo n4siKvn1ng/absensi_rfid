@@ -23,6 +23,7 @@ $hasil_kelas = mysqli_fetch_array($cek_kelas);
     <?php include "header.php"; ?>
     <title>Tambah Data Mahasiswa</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="./js/multiselect-dropdown.js"></script>
 
 </head>
 
@@ -46,49 +47,55 @@ $hasil_kelas = mysqli_fetch_array($cek_kelas);
                 <label>Nama Mahasiswa</label>
                 <input type="text" name="nama" id="nama" placeholder="Nama Mahasiswa" class="form-control" style="width: 250px" required value="<?php echo $hasil['nama']; ?>">
             </div>
+
             <!-- INPUTAN UNTUK KELAS PRAKTIKUM -->
+
+            <style type="text/css">
+                select {
+                    width: 265px;
+                    padding: 5px
+                }
+            </style>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var selectElement = document.querySelector("select[name='select']");
+                    var options = selectElement.options;
+
+                    selectElement.addEventListener('input', function() {
+                        var searchValue = this.value.toUpperCase();
+
+                        for (var i = 0; i < options.length; i++) {
+                            var option = options[i];
+                            var nama = option.getAttribute('data-nama').toUpperCase();
+
+                            if (nama.includes(searchValue)) {
+                                option.style.display = 'block';
+                            } else {
+                                option.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            </script>
+
             <div class="form-group">
                 <label for="id_kelas">Kelas Praktikum</label><br>
-                <div style="display: flex; justify-content: wrap">
-                    <div style="width: 150px">
-                        <?php
-                        $tambah_kelas = mysqli_query($konek, "SELECT * FROM kelas");
-                        $kelas_terpilih = explode(',', $hasil['id_kelas']);
-                        $total_data = mysqli_num_rows($tambah_kelas);
-                        $left_data = ceil($total_data / 2); // Jumlah data di sebelah kiri
-                        $counter = 0;
-
-                        while ($data = mysqli_fetch_array($tambah_kelas)) {
-                            if ($counter < $left_data) {
-                        ?>
-                                <div style="width: 100%;">
-                                    <input type='checkbox' name='id_kelas[]' value='<?php echo $data['id_kelas'] ?>' <?php if (in_array($data['id_kelas'], $kelas_terpilih)) echo 'checked' ?>>&nbsp;<?php echo $data['singkatan'] ?>
-                                </div>
-                        <?php
-                            }
-                            $counter++;
-                        }
-                        ?>
-                    </div>
-                    <div style="width: 150px">
-                        <?php
-                        mysqli_data_seek($tambah_kelas, 0); // Mengembalikan kursor ke awal hasil query
-                        $counter = 0;
-
-                        while ($data = mysqli_fetch_array($tambah_kelas)) {
-                            if ($counter >= $left_data) {
-                        ?>
-                                <div style="width: 100%;">
-                                    <input type='checkbox' name='id_kelas[]' value='<?php echo $data['id_kelas'] ?>' <?php if (in_array($data['id_kelas'], $kelas_terpilih)) echo 'checked' ?>>&nbsp;<?php echo $data['singkatan'] ?>
-                                </div>
-                        <?php
-                            }
-                            $counter++;
-                        }
-                        ?>
-                    </div>
-                </div>
+                <select name="select[]" multiple multiselect-search="true" multiselect-select-all="true" multiselect-select-max-items="true">
+                    <?php
+                    $tambah_kelas = mysqli_query($konek, "SELECT * FROM kelas");
+                    $kelas_terpilih = explode(',', $hasil['id_kelas']);
+                    while ($data = mysqli_fetch_array($tambah_kelas)) {
+                    ?>
+                        <option value="<?php echo $data['id_kelas']; ?>" <?php if (in_array($data['id_kelas'], $kelas_terpilih)) echo 'selected'; ?>>
+                            &nbsp;<?php echo $data['singkatan']; ?>
+                        </option>
+                    <?php
+                    }
+                    ?>
+                </select>
             </div>
+
 
 
             <button class="btn btn-primary" name="btnSimpan">Update</button>
@@ -103,19 +110,27 @@ $hasil_kelas = mysqli_fetch_array($cek_kelas);
 
     //kondisi jika tombol simpan diklik
     if (isset($_POST['btnSimpan'])) {
-        //baca isi inputan form
-        $nokartu    = $_POST['nokartu'];
-        $nama       = $_POST['nama'];
-        $id_kelas   = implode(",", $_POST['id_kelas']);
+        // Baca isi inputan form
+        $nokartu = $_POST['nokartu'];
+        $nama = $_POST['nama'];
+
+        // Periksa apakah $_POST['select'] terdefinisi dan merupakan array
+        $id_kelas = '';
+        if (isset($_POST['select']) && is_array($_POST['select'])) {
+            $id_kelas = implode(",", $_POST['select']);
+        }
 
         $cek_kelas = mysqli_query($konek, "SELECT * FROM kelas WHERE id_kelas='$id_kelas'");
         if (empty($id_kelas) || $id_kelas == '0') {
             echo "
-                    <script>
-                        alert('Kelas praktikum belum dipilih');
-                        location.href='tambahmahasiswa.php';
-                    </script>
-                ";
+                      <script>
+                        $(document).ready(function() {
+                            $('#kelas_kosong').modal('show');
+                            $('#nokartu').val('$nokartu');
+                            $('#nama').val('$nama');
+                        });
+                        </script>
+                    ";
         } else {
             //validasi inputan id_kelas
             $cek_kelas = mysqli_query($konek, "SELECT * FROM kelas WHERE id_kelas='$id_kelas'");

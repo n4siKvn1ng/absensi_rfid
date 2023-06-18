@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="./fontawesome-free-6.4.0-web/css/all.min.css">
     <script type="text/javascript" src="./fontawesome-free-6.4.0-web/js/all.min.js"></script>
 
+
     <style>
         #hapusTeks {
             display: none;
@@ -129,14 +130,20 @@
                 include "koneksi.php";
 
                 // cek apakah ada data yang dicari
+
                 if (isset($_GET['q']) && $_GET['q'] != '') {
                     $keyword = $_GET['q'];
                     // query pencarian data mahasiswa
                     $sql = mysqli_query($konek, "SELECT mahasiswa.*, GROUP_CONCAT(kelas.singkatan SEPARATOR ', ') as singkatan 
-                                FROM mahasiswa 
-                                LEFT JOIN kelas ON FIND_IN_SET(kelas.id_kelas, mahasiswa.id_kelas) 
-                                WHERE mahasiswa.nokartu LIKE '%$keyword%' OR mahasiswa.nama LIKE '%$keyword%' OR kelas.singkatan LIKE '%$keyword%'
-                                GROUP BY mahasiswa.id");
+                FROM mahasiswa 
+                LEFT JOIN kelas ON FIND_IN_SET(kelas.id_kelas, mahasiswa.id_kelas) 
+                WHERE mahasiswa.nokartu LIKE '%$keyword%' OR mahasiswa.nama LIKE '%$keyword%' OR kelas.singkatan LIKE '%$keyword%'
+                GROUP BY mahasiswa.id");
+
+                    if (mysqli_num_rows($sql) > 0) {
+                    } else {
+                        echo "<tr><td colspan='6' style='text-align: center; font-size: 15px; color: red;'>Tidak ada hasil yang ditemukan. Silakan periksa kembali kata kunci Anda.</td></tr>";
+                    }
                 } else {
                     // query menampilkan seluruh data mahasiswa
                     $sql = mysqli_query($konek, "SELECT mahasiswa.*, GROUP_CONCAT(kelas.singkatan SEPARATOR ', ') as singkatan FROM mahasiswa LEFT JOIN kelas ON FIND_IN_SET(kelas.id_kelas, mahasiswa.id_kelas) GROUP BY mahasiswa.id");
@@ -189,14 +196,6 @@
 
     </div>
 <?php } ?>
-
-<?php
-if (mysqli_num_rows($sql) == 0) {
-    echo "<tr><td colspan='6' style='text-align: center; font-size: 15px; color: red;'>Tidak ada hasil yang ditemukan. Silakan periksa kembali kata kunci Anda.</td></tr>";
-}
-?>
-
-
 </tbody>
 </table>
 

@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="./fontawesome-free-6.4.0-web/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="./css/all.min.css">
     <script type="text/javascript" src="./fontawesome-free-6.4.0-web/js/all.min.js"></script>
+    <script type="text/javascript" src="./js/multiselect-dropdown.js"></script>
 </head>
 
 <body>
@@ -18,7 +19,9 @@
     $hasil = mysqli_fetch_array($cari);
     $tambah_kelas = mysqli_query($konek, "SELECT * FROM `kelas`");
     $data = mysqli_fetch_array($tambah_kelas);
+    mysqli_query($konek, "TRUNCATE TABLE kirimdata");
     ?>
+
 
     <!--Pembacaan No Kartu Otomatis-->
     <script type="text/javascript">
@@ -43,6 +46,7 @@
         });
     </script>
     <!-- isi-->
+
     <form id="form-mahasiswa" method="POST">
         <!-- form input -->
         <div class="container-fluid">
@@ -52,15 +56,13 @@
             <!-- INPUTAN UNTUK NOMOR KARTU-->
             <div id="tampilnomor"></div>
 
+            <!-- INPUTAN UNTUK NIM-->
             <div class="form-group">
                 <label>Nomor Induk Mahasiswa (NIM)</label>
                 <div class="input-group">
                     <input type="text" name="nokartu" id="nokartu" placeholder="Ubah No. Kartu sesuai NIM" class="form-control" style="width: 250px; border-radius: 4px;" required>
                 </div>
             </div>
-
-
-
 
             <!--INPUTAN UNTUK NAMA MAHASISWA-->
             <div class="form-group">
@@ -72,83 +74,47 @@
 
 
             <!-- INPUTAN UNTUK KELAS PRAKTIKUM -->
-            <div class="form-group">
-                <label for="id_kelas">Kelas Praktikum</label><br>
-                <div style="display: flex; justify-content: wrap">
-                    <div style="width: 150px">
-                        <?php
-                        // Query to fetch all "Kelas Praktikum" data from the database
-                        $tambah_kelas = mysqli_query($konek, "SELECT * FROM kelas");
 
-                        // Count the total number of data fetched
-                        $total_data = mysqli_num_rows($tambah_kelas);
-
-                        // Calculate the number of data to display in the left column
-                        $left_data = ceil($total_data / 2);
-
-                        // Counter variable to keep track of the number of iterations
-                        $counter = 0;
-
-                        while ($data = mysqli_fetch_array($tambah_kelas)) {
-                            if ($counter < $left_data) {
-                                // Display checkboxes for the data in the left column
-                                echo "<div><input type='checkbox' name='id_kelas[]' value='$data[id_kelas]'>&nbsp;$data[singkatan]</div>";
-                            }
-                            $counter++;
-                        }
-                        ?>
-                    </div>
-                    <div style="width: 150px">
-                        <?php
-                        // Reset the cursor to the beginning of the query results
-                        mysqli_data_seek($tambah_kelas, 0);
-
-                        // Reset the counter variable
-                        $counter = 0;
-
-                        while ($data = mysqli_fetch_array($tambah_kelas)) {
-                            if ($counter >= $left_data) {
-                                // Display checkboxes for the data in the right column
-                                echo "<div><input type='checkbox' name='id_kelas[]' value='$data[id_kelas]'>&nbsp;$data[singkatan]</div>";
-                            }
-                            $counter++;
-                        }
-                        ?>
-                    </div>
-                </div>
-            </div>
-
-
+            <style type="text/css">
+                select {
+                    width: 265px;
+                    padding: 5px
+                }
+            </style>
 
             <script>
-                var selectElement = document.getElementById('kelasPraktikum');
-                var isCtrlPressed = false;
+                document.addEventListener('DOMContentLoaded', function() {
+                    var selectElement = document.querySelector("select[name='select']");
+                    var options = selectElement.options;
 
-                selectElement.addEventListener('change', function(e) {
-                    if (isCtrlPressed) {
-                        var selectedOptions = Array.from(this.selectedOptions);
-                        selectedOptions.forEach(function(option) {
-                            var checkbox = option.querySelector('input[type="checkbox"]');
-                            checkbox.checked = !checkbox.checked;
-                        });
-                    }
-                });
+                    selectElement.addEventListener('input', function() {
+                        var searchValue = this.value.toUpperCase();
 
-                // Mendeteksi saat tombol Ctrl ditekan atau dilepaskan
-                document.addEventListener('keydown', function(e) {
-                    if (e.key === 'Control') {
-                        isCtrlPressed = true;
-                    }
-                });
+                        for (var i = 0; i < options.length; i++) {
+                            var option = options[i];
+                            var nama = option.getAttribute('data-nama').toUpperCase();
 
-                document.addEventListener('keyup', function(e) {
-                    if (e.key === 'Control') {
-                        isCtrlPressed = false;
-                    }
+                            if (nama.includes(searchValue)) {
+                                option.style.display = 'block';
+                            } else {
+                                option.style.display = 'none';
+                            }
+                        }
+                    });
                 });
             </script>
 
-
+            <div class="form-group">
+                <label for="id_kelas">Kelas Praktikum</label><br>
+                <select name="select[]" multiple multiselect-search="true" multiselect-select-all="true" multiselect-select-max-items="true">
+                    <?php
+                    $tambah_kelas = mysqli_query($konek, "SELECT * FROM kelas");
+                    while ($data = mysqli_fetch_array($tambah_kelas)) {
+                        echo "<option value='$data[id_kelas]'>$data[singkatan]</option>";
+                    }
+                    ?>
+                </select>
+            </div>
 
             <button class="btn btn-primary" type="submit" name="btnSimpan">Simpan</button>
             <button class="btn btn-warning" name="batal" onclick="location.href='datamahasiswa.php'">Batal</button>
@@ -158,18 +124,27 @@
     <?php include "koneksi.php";
     //kondisi jika tombol simpan diklik
     if (isset($_POST['btnSimpan'])) {
-        //baca isi inputan form
-        $nokartu    = $_POST['nokartu'];
-        $nama       = $_POST['nama'];
-        $id_kelas   = implode(",", $_POST['id_kelas']);
+        // Baca isi inputan form
+        $nokartu = $_POST['nokartu'];
+        $nama = $_POST['nama'];
+
+        // Periksa apakah $_POST['select'] terdefinisi dan merupakan array
+        $id_kelas = '';
+        if (isset($_POST['select']) && is_array($_POST['select'])) {
+            $id_kelas = implode(",", $_POST['select']);
+        }
 
         $cek_kelas = mysqli_query($konek, "SELECT * FROM kelas WHERE id_kelas='$id_kelas'");
         if (empty($id_kelas) || $id_kelas == '0') {
             echo "
-                        <script>
-                            alert('Kelas praktikum belum dipilih');
-                            location.href='tambahmahasiswa.php';
-                        </script>";
+                            <script>
+                            $(document).ready(function() {
+                                $('#kelas_kosong').modal('show');
+                                $('#nokartu').val('$nokartu');
+                                $('#nama').val('$nama');
+                            });
+                            </script>
+        ";
         } else {
             //validasi inputan id_kelas
             $cek_kelas = mysqli_query($konek, "SELECT * FROM kelas WHERE id_kelas='$id_kelas'");
@@ -269,8 +244,6 @@
                     <h4><strong>Data Berhasil Tersimpan</strong></h4>
                 </div>
                 <div class="modal-footer">
-                     <h4>Tekan tombol "OKE"</h4>
-                     <h4>Lalu tempelkan ulang kartu RFID</h4>
                     <button type="button" class="btn btn-secondary" style="color: blue; border: 1px solid black; border-color: blue" data-dismiss="modal" onclick="window.location.href='datamahasiswa.php'">Oke</button>
                 </div>
             </div>
