@@ -4,3 +4,4 @@ kode dan artinya
 3 = kelas tidak ada
 4 = sudah pernah absen
 5 = berhasil absen
+6 = absen lebih awal
